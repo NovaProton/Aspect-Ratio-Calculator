@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel & Aspect Ratio Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .calculator-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            color: #444;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .result {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .common-ratios {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ratio-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .ratio-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .ratio-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-field {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pixel & Aspect Ratio Calculator</h1>
+        
+        <!-- Pixels to Aspect Ratio -->
+        <div class="calculator-section">
+            <h2 class="section-title">📐 Pixels to Aspect Ratio</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="width1">Width (px)</label>
+                    <input type="number" id="width1" placeholder="1920">
+                </div>
+                <div class="input-field">
+                    <label for="height1">Height (px)</label>
+                    <input type="number" id="height1" placeholder="1080">
+                </div>
+            </div>
+            <div class="result" id="result1">Enter width and height to see aspect ratio</div>
+        </div>
+
+        <!-- Aspect Ratio to Missing Dimension -->
+        <div class="calculator-section">
+            <h2 class="section-title">📏 Calculate Missing Dimension</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="knownSide">Known Side (px)</label>
+                    <input type="number" id="knownSide" placeholder="1920">
+                </div>
+                <div class="input-field">
+                    <label for="ratioW">Aspect Ratio Width</label>
+                    <input type="number" id="ratioW" placeholder="16" step="0.1">
+                </div>
+                <div class="input-field">
+                    <label for="ratioH">Aspect Ratio Height</label>
+                    <input type="number" id="ratioH" placeholder="9" step="0.1">
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="sideType">Known side is:</label>
+                    <select id="sideType" style="width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px;">
+                        <option value="width">Width (wider side)</option>
+                        <option value="height">Height (taller side)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="result" id="result2">Enter values to calculate missing dimension</div>
+            
+            <div class="common-ratios">
+                <button class="ratio-btn" onclick="setRatio(16, 9)">16:9</button>
+                <button class="ratio-btn" onclick="setRatio(4, 3)">4:3</button>
+                <button class="ratio-btn" onclick="setRatio(1, 1)">1:1</button>
+                <button class="ratio-btn" onclick="setRatio(3, 2)">3:2</button>
+                <button class="ratio-btn" onclick="setRatio(21, 9)">21:9</button>
+                <button class="ratio-btn" onclick="setRatio(5, 4)">5:4</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate GCD for simplifying ratios
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        // Common aspect ratios to check against
+        const commonRatios = [
+            {w: 1, h: 1, name: "1:1 (Square)"},
+            {w: 4, h: 3, name: "4:3 (Standard)"},
+            {w: 3, h: 2, name: "3:2 (Classic)"},
+            {w: 16, h: 10, name: "16:10 (Widescreen)"},
+            {w: 5, h: 3, name: "5:3"},
+            {w: 16, h: 9, name: "16:9 (HD)"},
+            {w: 2, h: 1, name: "2:1 (Univisium)"},
+            {w: 21, h: 9, name: "21:9 (Ultrawide)"},
+            {w: 32, h: 9, name: "32:9 (Super Ultrawide)"},
+            {w: 3, h: 1, name: "3:1"},
+            {w: 9, h: 16, name: "9:16 (Vertical)"},
+            {w: 3, h: 4, name: "3:4 (Vertical)"},
+            {w: 2, h: 3, name: "2:3 (Vertical)"}
+        ];
+
+        // Find closest aspect ratio
+        function findClosestRatio(width, height) {
+            const targetRatio = width / height;
+            let closestRatio = null;
+            let smallestDiff = Infinity;
+
+            for (let ratio of commonRatios) {
+                const ratioValue = ratio.w / ratio.h;
+                const diff = Math.abs(targetRatio - ratioValue);
+                if (diff < smallestDiff) {
+                    smallestDiff = diff;
+                    closestRatio = ratio;
+                }
+            }
+
+            return closestRatio;
+        }
+
+        // Calculate aspect ratio from pixels
+        function calculateAspectRatio() {
+            const width = parseInt(document.getElementById('width1').value);
+            const height = parseInt(document.getElementById('height1').value);
+            const result = document.getElementById('result1');
+
+            if (!width || !height || width <= 0 || height <= 0) {
+                result.textContent = 'Enter valid width and height values';
+                return;
+            }
+
+            const divisor = gcd(width, height);
+            const ratioW = width / divisor;
+            const ratioH = height / divisor;
+            const decimal = width / height;
+
+            // Find closest common ratio
+            const closest = findClosestRatio(width, height);
+            const closestDecimal = closest.w / closest.h;
+            const percentDiff = Math.abs((decimal - closestDecimal) / closestDecimal * 100);
+
+            let resultHTML = `
+                <strong>${width} × ${height}</strong> = 
+                <strong>${ratioW}:${ratioH}</strong>
+                <br><small>Decimal: ${decimal.toFixed(3)}</small>
+            `;
+
+            // If within 5% of a common ratio, suggest it
+            if (percentDiff < 5 && (ratioW !== closest.w || ratioH !== closest.h)) {
+                resultHTML += `<br><small style="color: #FFE135;">💡 Close to <strong>${closest.name}</strong> (${percentDiff.toFixed(1)}% difference)</small>`;
+            }
+
+            result.innerHTML = resultHTML;
+        }
+
+        // Calculate missing dimension with smart rounding
+        function calculateMissingDimension() {
+            const knownSide = parseInt(document.getElementById('knownSide').value);
+            const ratioW = parseFloat(document.getElementById('ratioW').value);
+            const ratioH = parseFloat(document.getElementById('ratioH').value);
+            const sideType = document.getElementById('sideType').value;
+            const result = document.getElementById('result2');
+
+            if (!knownSide || !ratioW || !ratioH || knownSide <= 0 || ratioW <= 0 || ratioH <= 0) {
+                result.textContent = 'Enter valid values for all fields';
+                return;
+            }
+
+            let width, height, exactOther;
+
+            if (sideType === 'width') {
+                width = knownSide;
+                exactOther = (knownSide * ratioH) / ratioW;
+                height = Math.round(exactOther);
+            } else {
+                height = knownSide;
+                exactOther = (knownSide * ratioW) / ratioH;
+                width = Math.round(exactOther);
+            }
+
+            let resultHTML = `
+                <strong>Dimensions: ${width} × ${height} pixels</strong>
+                <br><small>Aspect ratio: ${ratioW}:${ratioH}</small>
+            `;
+
+            // Show if there's rounding involved
+            const roundingDiff = Math.abs(exactOther - Math.round(exactOther));
+            if (roundingDiff > 0.01) {
+                const exactDimension = exactOther.toFixed(2);
+                const roundedDimension = Math.round(exactOther);
+                resultHTML += `<br><small style="color: #FFE135;">💡 Exact ${sideType === 'width' ? 'height' : 'width'}: ${exactDimension}px (rounded to ${roundedDimension}px)</small>`;
+            }
+
+            result.innerHTML = resultHTML;
+        }
+
+        // Set common aspect ratios
+        function setRatio(w, h) {
+            document.getElementById('ratioW').value = w;
+            document.getElementById('ratioH').value = h;
+            calculateMissingDimension();
+        }
+
+        // Add event listeners
+        document.getElementById('width1').addEventListener('input', calculateAspectRatio);
+        document.getElementById('height1').addEventListener('input', calculateAspectRatio);
+        document.getElementById('knownSide').addEventListener('input', calculateMissingDimension);
+        document.getElementById('ratioW').addEventListener('input', calculateMissingDimension);
+        document.getElementById('ratioH').addEventListener('input', calculateMissingDimension);
+        document.getElementById('sideType').addEventListener('change', calculateMissingDimension);
+
+        // Initialize with example values
+        document.getElementById('width1').value = 1920;
+        document.getElementById('height1').value = 1080;
+        calculateAspectRatio();
+    </script>
+</body>
+</html>
